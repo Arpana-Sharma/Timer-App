@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 500px;
+        }
+
+        #container {
+            position: absolute;
+            left: 550px;
+            width: 173px;
+            height: 173px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #btcont {
+            display: flex;
+        }
+
+        button {
+            background-color: white;
+            border: 0px;
+        }
+
+        #count {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            height: 36px;
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <svg height="200" width="200">
+        <circle id = "circ" r="90" cx="100" cy="100" fill="transparent" stroke="black" stroke-width="10" stroke-dasharray="565.3"
+            stroke-dashoffset="0" transform = "rotate(-90,100,100)" />
+    </svg>
+    <div id="container">
+        <div id="count">30</div>
+        <div id="btcont">
+            <button id="start"><img src="icons8-play-30.png" alt=""></button>
+            <button id="pause"><img src="icons8-pause-30.png" alt=""></button>
+        </div>
+    </div>
+    <script>
+        const count = document.querySelector("#count");
+        const start = document.querySelector("#start");
+        const pause = document.querySelector("#pause");
+        const circ = document.querySelector("#circ");
+        var discriminant = 30;
+        var isPaused = false;
+        let myInterval;
+        let ptr = 2;
+        let checker = 0;
+        count.addEventListener("click", function () {
+            if (checker == 0) {
+                count.contentEditable = "true";
+                ptr = 2;
+            }
+            else {
+                count.contentEditable = "false";
+            }
+        });
+        start.addEventListener("click", function () {
+            if (ptr == 2) {
+                if(isPaused == false){
+                    discriminant = parseFloat(count.innerHTML);
+                    circ.attributes[7].nodeValue = '565.3';
+                    circ.attributes[8].nodeValue = '0';
+                }
+                count.contentEditable = "false";
+                myInterval = setInterval(function () {
+                    let x = parseFloat(count.innerHTML);
+                    if (x == 0.01) {
+                        isPaused = false;                   
+                        clearInterval(myInterval);                     
+                    }
+                    count.innerHTML = `${Math.round((x - 0.01)*100)/100}`;
+                    checker = parseFloat(count.innerHTML);
+                    circ.attributes[8].nodeValue = `${parseFloat(circ.attributes[8].nodeValue)-(2*3.14*0.9/discriminant)}`;
+                }, 10);
+                ptr = 1;
+            }
+        });
+        pause.addEventListener("click", function () {
+            clearInterval(myInterval);
+            ptr = 2;
+            isPaused = true;
+        });
+        // (2*pi*r/n)
+    </script>
+</body>
+
+</html>
